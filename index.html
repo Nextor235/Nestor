@@ -77,19 +77,19 @@
                 <div class="card-shine"></div>
                 <div class="stats-grid">
                     <div class="stat">
-                        <div class="stat-num">2+</div>
+                        <div class="stat-num" data-target="2" data-suffix="+">0+</div>
                         <div class="stat-label">Years Exp</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-num">96%</div>
+                        <div class="stat-num" data-target="96" data-suffix="%">0%</div>
                         <div class="stat-label">Resolution</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-num">150+</div>
+                        <div class="stat-num" data-target="150" data-suffix="+">0+</div>
                         <div class="stat-label">Users Supported</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-num">24h</div>
+                        <div class="stat-num" data-target="24" data-suffix="h">0h</div>
                         <div class="stat-label">Response SLA</div>
                     </div>
                 </div>
@@ -395,12 +395,35 @@
             });
         }
 
-        // Scroll reveal
+        // Scroll reveal & Number animation
         const reveals = document.querySelectorAll('.reveal');
         const observer = new IntersectionObserver(entries => {
             entries.forEach((e, i) => {
-                if (e.isIntersecting) {
-                    setTimeout(() => e.target.classList.add('visible'), i * 100);
+                if (e.isIntersecting && !e.target.classList.contains('visible')) {
+                    setTimeout(() => {
+                        e.target.classList.add('visible');
+                        
+                        // Counter animation
+                        const stats = e.target.querySelectorAll('.stat-num');
+                        stats.forEach(stat => {
+                            const target = +stat.getAttribute('data-target');
+                            const suffix = stat.getAttribute('data-suffix') || '';
+                            const duration = 2000;
+                            const increment = target / (duration / 16);
+                            let current = 0;
+                            
+                            const updateCounter = () => {
+                                current += increment;
+                                if (current < target) {
+                                    stat.innerText = Math.ceil(current) + suffix;
+                                    requestAnimationFrame(updateCounter);
+                                } else {
+                                    stat.innerText = target + suffix;
+                                }
+                            };
+                            updateCounter();
+                        });
+                    }, i * 100);
                 }
             });
         }, { threshold: 0.1 });
