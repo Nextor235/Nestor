@@ -1,0 +1,252 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Education | Nestor Rodriguez</title><meta name="description" content="Educational background and certifications of Nestor Rodriguez, an IT Support professional."><link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/education.D_kh_gkY.css"></head> <body> <div class="cursor" id="cursor"></div> <div class="cursor-ring" id="cursorRing"></div> <nav> <div class="nav-logo">NESTOR R.</div> <div class="hamburger"> <span></span> <span></span> <span></span> </div> <ul class="nav-links"> <li><a href="/#about">About</a></li> <li><a href="/#skills">Skills</a></li> <li><a href="/experience">Experience</a></li> <li><a href="/education">Education</a></li> <li><a href="/#contact">Contact</a></li> </ul> </nav> <script>
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+        document.querySelectorAll('.nav-links a').forEach(a => {
+            a.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+    }
+</script>   <section class="hero" id="home" style="min-height: 50vh;"> <div class="grid-3d"> <div class="grid-plane"></div> </div> <div class="orb orb1"></div> <div class="hero-content"> <div class="hero-tag">// Academic Background</div> <h1 class="hero-name" style="font-size: clamp(3rem, 8vw, 6rem);"><span>Education</span><br> & Certs</h1> <p class="hero-desc">Degrees and certifications verifying my IT expertise.</p> </div> </section> <div class="divider"></div>  <section id="education" style="padding-top: 60px; padding-bottom: 20px;"> <div class="section-label">// 01 — Education</div> <div class="section-title">Academic <em>Degrees</em></div> <div class="projects-grid reveal"> <div class="project-card" style="transform-style: flat;"> <div class="project-body hover-reveal-video"> <div class="project-tag">May 2020 – May 2022</div> <div class="project-name">Diploma of IT</div> <div class="project-desc">Nortwest College, Sydney. Key learning areas included web development and wireframing tools.</div> <div class="video-reveal"> <a href="https://nortwest.edu.au/" target="_blank" rel="noopener noreferrer"> <img src="https://nortwest.edu.au/assets/img/Nortwest-Logo__NW-logo_sydney-campus.png" alt="Nortwest College" style="width: 100%; height: 180px; object-fit: contain; background: white; border-radius: 4px; padding: 15px; cursor: pointer;"> </a> </div> </div> </div> <div class="project-card" style="transform-style: flat;"> <div class="project-body hover-reveal-video"> <div class="project-tag">Jul 2012 – Apr 2018</div> <div class="project-name">Bachelor of Systems Engineering</div> <div class="project-desc">UNAD, Colombia. Key learning areas included networking, helpdesk, system analysis, and software development.</div> <div class="video-reveal"> <a href="https://www.unad.edu.co/" target="_blank" rel="noopener noreferrer"> <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Logo_unad_color.png" alt="UNAD" style="width: 100%; height: 180px; object-fit: contain; background: white; border-radius: 4px; padding: 15px; cursor: pointer;"> </a> </div> </div> </div> </div> </section> <div class="divider"></div>  <section id="certifications" style="padding-top: 60px;"> <div class="section-label">// 02 — Certifications</div> <div class="section-title">Professional <em>Certificates</em></div> <div class="cert-showcase reveal"> <div class="cert-carousel-viewport"> <div class="cert-carousel-track" id="certTrack"> <div class="cert-slide" style="flex: 1;"> <img src="https://www.e-tp.uk/wp-content/uploads/2019/01/ITIL-f-v3.jpg" alt="ITIL V3 Foundation"> </div> <div class="cert-slide" style="flex: 1;"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWfA3kISZfolzgLeoJl7whdJ1D4ohoMQAtOA&s" alt="Google IT Support"> </div> <div class="cert-slide" style="flex: 1;"> <img src="https://www.certifiedskills.academy/wp-content/uploads/2019/07/mcsa-bi-reporting.png" alt="Microsoft Certified Professional"> </div> <div class="cert-slide" style="flex: 1;"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq_3RU5actbIo68dOqTXt_2qC1XZskmz7DGA&s" alt="CompTIA A+"> </div> </div> </div> <div class="cert-list-wrapper"> <button class="cert-nav-btn cert-up" aria-label="Previous"> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg> </button> <div class="cert-list"> <div class="cert-list-item active" data-index="0"> <div class="cert-tag">Certification</div> <div class="cert-name">ITIL V3 Foundation</div> <div class="cert-desc">Certified in aligning IT services with business needs, framework mastery, and proactive support lifecycle management.</div> </div> <div class="cert-list-item" data-index="1"> <div class="cert-tag">Certification</div> <div class="cert-name">Google IT Support</div> <div class="cert-desc">Comprehensive certification covering troubleshooting, customer service, networking, OS, and systems security.</div> </div> <div class="cert-list-item" data-index="2"> <div class="cert-tag">Certification</div> <div class="cert-name">Microsoft Certified Professional</div> <div class="cert-desc">Demonstrated foundational knowledge and technical expertise in Microsoft products and solutions.</div> </div> <div class="cert-list-item" data-index="3"> <div class="cert-tag">Certification</div> <div class="cert-name">CompTIA A+</div> <div class="cert-desc">Validated skills in hardware, software, and networking troubleshooting and end-point management.</div> </div> </div> <button class="cert-nav-btn cert-down" aria-label="Next"> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg> </button> </div> </div> </section>  <section id="contact" style="padding: 60px 0; text-align: center;"> <div class="contact-inner reveal"> <a href="/#contact" class="btn-primary" style="display: inline-block;">Get in Touch</a> </div> </section>  <footer> <p>© 2026 <span>Nestor Rodriguez</span> — IT Support Specialist</p> <p>Built by <span>human</span>, optimized by <span>AI</span> ⚡</p> </footer> <script>
+        const cursor = document.getElementById('cursor');
+        const ring = document.getElementById('cursorRing');
+        let mx = 0, my = 0, rx = 0, ry = 0;
+
+        if (cursor && ring) {
+            document.addEventListener('mousemove', e => {
+                mx = e.clientX; 
+                my = e.clientY;
+                cursor.style.left = mx + 'px';
+                cursor.style.top = my + 'px';
+            });
+            function animRing() {
+                rx += (mx - rx) * 0.12;
+                ry += (my - ry) * 0.12;
+                ring.style.left = rx + 'px';
+                ring.style.top = ry + 'px';
+                requestAnimationFrame(animRing);
+            }
+            animRing();
+
+            document.querySelectorAll('a, button, .skill-card, .project-card, .interest-item, .btn-primary').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.style.width = '20px'; cursor.style.height = '20px';
+                    ring.style.width = '60px'; ring.style.height = '60px';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.style.width = '12px'; cursor.style.height = '12px';
+                    ring.style.width = '36px'; ring.style.height = '36px';
+                });
+            });
+        }
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach((e, i) => {
+                if (e.isIntersecting && !e.target.classList.contains('visible')) {
+                    setTimeout(() => {
+                        e.target.classList.add('visible');
+                    }, i * 100);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        const counterObserver = new IntersectionObserver(entries => {
+            entries.forEach((e, i) => {
+                if (e.isIntersecting && !e.target.classList.contains('visible-counter')) {
+                    setTimeout(() => {
+                        e.target.classList.add('visible-counter');
+                        const stats = e.target.querySelectorAll('.stat-num');
+                        stats.forEach(stat => {
+                            const target = +stat.getAttribute('data-target');
+                            const suffix = stat.getAttribute('data-suffix') || '';
+                            const duration = 2000;
+                            const increment = target / (duration / 16);
+                            let current = 0;
+                            const updateCounter = () => {
+                                current += increment;
+                                if (current < target) {
+                                    stat.innerText = Math.ceil(current) + suffix;
+                                    requestAnimationFrame(updateCounter);
+                                } else {
+                                    stat.innerText = target + suffix;
+                                }
+                            };
+                            updateCounter();
+                        });
+                    }, i * 100);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            if (el.querySelector('.stat-num')) counterObserver.observe(el);
+        });
+
+        const setupWaterFollower = () => {
+            const grid3d = document.querySelector('.grid-3d');
+            const heroSection = document.querySelector('.hero');
+            
+            if(heroSection && grid3d && !grid3d.hasAttribute('data-water-init')) {
+                grid3d.setAttribute('data-water-init', 'true');
+                const waterFollower = document.createElement('div');
+                waterFollower.className = 'water-follower';
+                grid3d.appendChild(waterFollower);
+                
+                let followerX = 0, followerY = 0;
+                let targetX = 0, targetY = 0;
+                let initialized = false;
+                let lastDropTime = 0;
+
+                heroSection.addEventListener('mousemove', e => {
+                    const rect = grid3d.getBoundingClientRect();
+                    targetX = e.clientX - rect.left;
+                    targetY = e.clientY - rect.top;
+                    
+                    if(!initialized) {
+                        followerX = targetX;
+                        followerY = targetY;
+                        waterFollower.style.opacity = '1';
+                        waterFollower.style.transform = 'translate(-50%, -50%) scale(1)';
+                        waterFollower.classList.add('first-contact');
+                        initialized = true;
+                    }
+                });
+                
+                heroSection.addEventListener('mouseleave', () => {
+                    waterFollower.style.opacity = '0';
+                    waterFollower.style.transform = 'translate(-50%, -50%) scale(0)';
+                    waterFollower.classList.remove('first-contact');
+                    initialized = false;
+                });
+
+                function animWater() {
+                    if (initialized) {
+                        const dx = targetX - followerX;
+                        const dy = targetY - followerY;
+                        followerX += dx * 0.15;
+                        followerY += dy * 0.15;
+                        waterFollower.style.left = followerX + 'px';
+                        waterFollower.style.top = followerY + 'px';
+
+                        const speed = Math.sqrt(dx * dx + dy * dy);
+                        const now = Date.now();
+                        
+                        if (speed > 1.5 && now - lastDropTime > 30) {
+                            const trail = document.createElement('div');
+                            trail.className = 'water-trail';
+                            trail.style.left = followerX + 'px';
+                            trail.style.top = followerY + 'px';
+                            const angle = Math.atan2(dy, dx) + (Math.PI / 2);
+                            trail.style.setProperty('--rot', `${angle}rad`);
+                            grid3d.appendChild(trail);
+                            setTimeout(() => trail.remove(), 700);
+                            lastDropTime = now;
+                        }
+                    }
+                    requestAnimationFrame(animWater);
+                }
+                animWater();
+            }
+        };
+        setupWaterFollower();
+    </script> </body> </html> <script>
+    // Certifications Carousel Logic
+    const certItems = document.querySelectorAll('.cert-list-item');
+    const certTrack = document.getElementById('certTrack');
+    const btnUp = document.querySelector('.cert-up');
+    const btnDown = document.querySelector('.cert-down');
+    
+    if (certItems.length > 0 && certTrack) {
+        let startIndex = 0;
+        const visibleCount = 2;
+        const totalItems = certItems.length;
+
+        certTrack.style.width = (totalItems * 100) + '%';
+
+        const renderList = () => {
+            certItems.forEach((item, i) => {
+                if (i >= startIndex && i < startIndex + visibleCount) {
+                    item.style.display = 'block';
+                    setTimeout(() => item.style.opacity = '1', 50);
+                } else {
+                    item.style.display = 'none';
+                    item.style.opacity = '0';
+                }
+            });
+            
+            if (btnUp) {
+                btnUp.style.opacity = startIndex === 0 ? '0.3' : '1';
+                btnUp.style.cursor = startIndex === 0 ? 'default' : 'pointer';
+            }
+            if (btnDown) {
+                btnDown.style.opacity = startIndex >= totalItems - visibleCount ? '0.3' : '1';
+                btnDown.style.cursor = startIndex >= totalItems - visibleCount ? 'default' : 'pointer';
+            }
+        };
+
+        if (btnUp) {
+            btnUp.addEventListener('click', () => {
+                if (startIndex > 0) {
+                    startIndex--;
+                    renderList();
+                }
+            });
+        }
+
+        if (btnDown) {
+            btnDown.addEventListener('click', () => {
+                if (startIndex < totalItems - visibleCount) {
+                    startIndex++;
+                    renderList();
+                }
+            });
+        }
+
+        const listWrapper = document.querySelector('.cert-list-wrapper');
+        if (listWrapper) {
+            let isWheelScrolling = false;
+            listWrapper.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                if (isWheelScrolling) return;
+
+                if (e.deltaY > 0) { // scroll down
+                    if (startIndex < totalItems - visibleCount) {
+                        startIndex++;
+                        renderList();
+                        isWheelScrolling = true;
+                        setTimeout(() => isWheelScrolling = false, 300);
+                    }
+                } else if (e.deltaY < 0) { // scroll up
+                    if (startIndex > 0) {
+                        startIndex--;
+                        renderList();
+                        isWheelScrolling = true;
+                        setTimeout(() => isWheelScrolling = false, 300);
+                    }
+                }
+            });
+        }
+
+        // Init visibility
+        renderList();
+
+        // Hover tracking
+        certItems.forEach((item, index) => {
+            item.addEventListener('mouseenter', () => {
+                certItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                certTrack.style.transform = `translateX(-${(index * 100) / totalItems}%)`;
+            });
+        });
+    }
+</script>

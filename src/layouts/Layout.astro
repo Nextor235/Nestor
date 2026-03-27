@@ -1,0 +1,183 @@
+---
+import '../styles/global.css';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const { 
+    title = 'Nestor Rodriguez | IT Support Specialist', 
+    description = 'Professional portfolio website for Nestor Rodriguez.' 
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <Navigation />
+
+    <slot />
+
+    <Footer />
+
+    <script is:inline>
+        const cursor = document.getElementById('cursor');
+        const ring = document.getElementById('cursorRing');
+        let mx = 0, my = 0, rx = 0, ry = 0;
+
+        if (cursor && ring) {
+            document.addEventListener('mousemove', e => {
+                mx = e.clientX; 
+                my = e.clientY;
+                cursor.style.left = mx + 'px';
+                cursor.style.top = my + 'px';
+            });
+            function animRing() {
+                rx += (mx - rx) * 0.12;
+                ry += (my - ry) * 0.12;
+                ring.style.left = rx + 'px';
+                ring.style.top = ry + 'px';
+                requestAnimationFrame(animRing);
+            }
+            animRing();
+
+            document.querySelectorAll('a, button, .skill-card, .project-card, .interest-item, .btn-primary').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.style.width = '20px'; cursor.style.height = '20px';
+                    ring.style.width = '60px'; ring.style.height = '60px';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.style.width = '12px'; cursor.style.height = '12px';
+                    ring.style.width = '36px'; ring.style.height = '36px';
+                });
+            });
+        }
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach((e, i) => {
+                if (e.isIntersecting && !e.target.classList.contains('visible')) {
+                    setTimeout(() => {
+                        e.target.classList.add('visible');
+                    }, i * 100);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        const counterObserver = new IntersectionObserver(entries => {
+            entries.forEach((e, i) => {
+                if (e.isIntersecting && !e.target.classList.contains('visible-counter')) {
+                    setTimeout(() => {
+                        e.target.classList.add('visible-counter');
+                        const stats = e.target.querySelectorAll('.stat-num');
+                        stats.forEach(stat => {
+                            const target = +stat.getAttribute('data-target');
+                            const suffix = stat.getAttribute('data-suffix') || '';
+                            const duration = 2000;
+                            const increment = target / (duration / 16);
+                            let current = 0;
+                            const updateCounter = () => {
+                                current += increment;
+                                if (current < target) {
+                                    stat.innerText = Math.ceil(current) + suffix;
+                                    requestAnimationFrame(updateCounter);
+                                } else {
+                                    stat.innerText = target + suffix;
+                                }
+                            };
+                            updateCounter();
+                        });
+                    }, i * 100);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            if (el.querySelector('.stat-num')) counterObserver.observe(el);
+        });
+
+        const setupWaterFollower = () => {
+            const grid3d = document.querySelector('.grid-3d');
+            const heroSection = document.querySelector('.hero');
+            
+            if(heroSection && grid3d && !grid3d.hasAttribute('data-water-init')) {
+                grid3d.setAttribute('data-water-init', 'true');
+                const waterFollower = document.createElement('div');
+                waterFollower.className = 'water-follower';
+                grid3d.appendChild(waterFollower);
+                
+                let followerX = 0, followerY = 0;
+                let targetX = 0, targetY = 0;
+                let initialized = false;
+                let lastDropTime = 0;
+
+                heroSection.addEventListener('mousemove', e => {
+                    const rect = grid3d.getBoundingClientRect();
+                    targetX = e.clientX - rect.left;
+                    targetY = e.clientY - rect.top;
+                    
+                    if(!initialized) {
+                        followerX = targetX;
+                        followerY = targetY;
+                        waterFollower.style.opacity = '1';
+                        waterFollower.style.transform = 'translate(-50%, -50%) scale(1)';
+                        waterFollower.classList.add('first-contact');
+                        initialized = true;
+                    }
+                });
+                
+                heroSection.addEventListener('mouseleave', () => {
+                    waterFollower.style.opacity = '0';
+                    waterFollower.style.transform = 'translate(-50%, -50%) scale(0)';
+                    waterFollower.classList.remove('first-contact');
+                    initialized = false;
+                });
+
+                function animWater() {
+                    if (initialized) {
+                        const dx = targetX - followerX;
+                        const dy = targetY - followerY;
+                        followerX += dx * 0.15;
+                        followerY += dy * 0.15;
+                        waterFollower.style.left = followerX + 'px';
+                        waterFollower.style.top = followerY + 'px';
+
+                        const speed = Math.sqrt(dx * dx + dy * dy);
+                        const now = Date.now();
+                        
+                        if (speed > 1.5 && now - lastDropTime > 30) {
+                            const trail = document.createElement('div');
+                            trail.className = 'water-trail';
+                            trail.style.left = followerX + 'px';
+                            trail.style.top = followerY + 'px';
+                            const angle = Math.atan2(dy, dx) + (Math.PI / 2);
+                            trail.style.setProperty('--rot', `${angle}rad`);
+                            grid3d.appendChild(trail);
+                            setTimeout(() => trail.remove(), 700);
+                            lastDropTime = now;
+                        }
+                    }
+                    requestAnimationFrame(animWater);
+                }
+                animWater();
+            }
+        };
+        setupWaterFollower();
+    </script>
+</body>
+</html>
