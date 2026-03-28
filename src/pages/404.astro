@@ -1,0 +1,381 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="404 - This page could not be found." description="The page you requested could not be found.">
+    <section class="hero" style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 80px;">
+        <div class="grid-3d">
+            <div class="grid-plane"></div>
+        </div>
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+
+        <div class="hero-content" style="text-align: center; max-width: 800px; z-index: 10; margin: 0 auto;">
+            <div class="section-label" style="text-align: center;">// ERROR 404</div>
+            <h1 class="hero-name" style="font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 14px;"><span>Page Not Found</span></h1>
+            <p class="hero-desc" style="margin: 0 auto 30px auto; max-width: 500px;">The data you are looking for does not exist.</p>
+            
+            <div class="game-container">
+                <canvas id="snakeGame" width="400" height="400"></canvas>
+                <div id="gameOverlay" class="game-overlay">
+                    <h2 id="gameOverText">Snake // Reboot</h2>
+                    <p id="finalScore">Score: 0</p>
+                    <div style="display: flex; gap: 15px; margin-top: 25px;">
+                        <button id="startBtn" class="btn-primary">Start Game</button>
+                        <a href={`${import.meta.env.BASE_URL === '/' ? '/' : import.meta.env.BASE_URL}`} class="btn-secondary" style="text-decoration: none;">Return Home</a>
+                    </div>
+                </div>
+                <div class="score-display">Score: <span id="scoreVal">0</span></div>
+            </div>
+
+            <!-- Mobile Controls -->
+            <div class="mobile-controls">
+                <button class="d-btn up" id="btnUp">▲</button>
+                <div class="d-row">
+                    <button class="d-btn left" id="btnLeft">◀</button>
+                    <button class="d-btn right" id="btnRight">▶</button>
+                </div>
+                <button class="d-btn down" id="btnDown">▼</button>
+            </div>
+        </div>
+    </section>
+</Layout>
+
+<style>
+    .game-container {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        background: rgba(15, 23, 42, 0.4);
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+    }
+    
+    canvas {
+        display: block;
+        background: transparent;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+        image-rendering: auto; 
+    }
+
+    .game-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(15, 23, 42, 0.85);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        backdrop-filter: blur(6px);
+    }
+
+    .game-overlay.hidden {
+        display: none;
+    }
+
+    #gameOverText {
+        font-family: 'Syne', sans-serif;
+        font-size: 2.2rem;
+        color: var(--surface);
+        margin-bottom: 5px;
+    }
+
+    #finalScore {
+        color: #60a5fa;
+        font-weight: bold;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .score-display {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: var(--text);
+        font-weight: bold;
+        background: var(--surface);
+        padding: 5px 14px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        font-size: 0.85rem;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .mobile-controls {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        margin-top: 35px;
+        margin-bottom: 40px;
+    }
+
+    .d-row {
+        display: flex;
+        gap: 60px;
+    }
+
+    .d-btn {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: var(--shadow-sm);
+        user-select: none;
+        touch-action: manipulation;
+        transition: transform 0.1s ease, background 0.1s ease;
+    }
+
+    .d-btn:active {
+        background: var(--accent-soft);
+        transform: scale(0.92);
+    }
+
+    @media (max-width: 768px) {
+        .mobile-controls {
+            display: flex;
+        }
+        .game-container {
+            max-width: 340px;
+        }
+    }
+</style>
+
+<script is:inline>
+    const canvas = document.getElementById('snakeGame');
+    const ctx = canvas.getContext('2d');
+    const scoreVal = document.getElementById('scoreVal');
+    const finalScore = document.getElementById('finalScore');
+    const overlay = document.getElementById('gameOverlay');
+    const startBtn = document.getElementById('startBtn');
+    const overText = document.getElementById('gameOverText');
+
+    // Controls
+    const btnUp = document.getElementById('btnUp');
+    const btnDown = document.getElementById('btnDown');
+    const btnLeft = document.getElementById('btnLeft');
+    const btnRight = document.getElementById('btnRight');
+
+    const gridSize = 20;
+    const tileCount = canvas.width / gridSize; // 400 / 20 = 20 tiles
+    
+    let snake = [];
+    let appleX = 10;
+    let appleY = 10;
+    let velocityX = 0;
+    let velocityY = 0;
+    let lastVelocityX = 0;
+    let lastVelocityY = 0;
+    let score = 0;
+    let gameLoop;
+    let isPlaying = false;
+
+    // Theming Colors (Match portfolio aesthetic)
+    const snakeHeadColor = '#2563eb'; // Deep Blue
+    const snakeBodyColor = '#60a5fa'; // Light Blue 
+    const appleColor = '#f43f5e';     // Red/Pink Accent
+    const gridColor = 'rgba(37, 99, 235, 0.15)'; // Faint blue grid
+
+    function resetGame() {
+        // Start snake at center moving up
+        snake = [
+            { x: 10, y: 15 },
+            { x: 10, y: 16 },
+            { x: 10, y: 17 }
+        ];
+        score = 0;
+        velocityX = 0;
+        velocityY = -1;
+        scoreVal.innerText = score;
+        spawnApple();
+        overlay.classList.add('hidden');
+        isPlaying = true;
+        
+        // Mobile scroll lock when playing
+        document.body.style.overflow = 'hidden'; 
+        
+        if(gameLoop) clearInterval(gameLoop);
+        gameLoop = setInterval(drawGame, 110); 
+    }
+
+    function gameOver() {
+        isPlaying = false;
+        clearInterval(gameLoop);
+        overlay.classList.remove('hidden');
+        overText.innerText = "System Failure";
+        finalScore.innerText = `Final Score: ${score}`;
+        startBtn.innerText = "Try Again";
+        document.body.style.overflow = ''; // Unlock scroll
+    }
+
+    function drawGame() {
+        moveSnake();
+        const hitWall = checkCollision();
+        if (hitWall) {
+            gameOver();
+            return;
+        }
+        clearScreen();
+        checkAppleMatch();
+        drawApple();
+        drawSnake();
+        
+        lastVelocityX = velocityX;
+        lastVelocityY = velocityY;
+    }
+
+    function clearScreen() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw cyber-grid background
+        ctx.strokeStyle = gridColor;
+        ctx.lineWidth = 1;
+        for(let i=0; i<tileCount; i++) {
+            for(let j=0; j<tileCount; j++) {
+                ctx.strokeRect(i * gridSize, j * gridSize, gridSize, gridSize);
+            }
+        }
+    }
+
+    function drawSnake() {
+        for (let i = 0; i < snake.length; i++) {
+            let part = snake[i];
+            
+            // Snake coloring and simple styling
+            if(i === 0) {
+                // Head
+                ctx.fillStyle = snakeHeadColor;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = snakeHeadColor;
+                ctx.fillRect(part.x * gridSize + 1, part.y * gridSize + 1, gridSize - 2, gridSize - 2);
+                ctx.shadowBlur = 0;
+            } else {
+                // Body
+                ctx.fillStyle = snakeBodyColor;
+                ctx.fillRect(part.x * gridSize + 2, part.y * gridSize + 2, gridSize - 4, gridSize - 4);
+            }
+        }
+    }
+
+    function drawApple() {
+        ctx.fillStyle = appleColor;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = appleColor;
+        ctx.beginPath();
+        ctx.arc(appleX * gridSize + gridSize/2, appleY * gridSize + gridSize/2, gridSize/2 - 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+    }
+
+    function moveSnake() {
+        const head = { x: snake[0].x + velocityX, y: snake[0].y + velocityY };
+        snake.unshift(head);
+    }
+
+    function checkCollision() {
+        let head = snake[0];
+        
+        // Wall collision
+        if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+            return true;
+        }
+        // Self collision
+        for (let i = 1; i < snake.length; i++) {
+            if (head.x === snake[i].x && head.y === snake[i].y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function checkAppleMatch() {
+        let head = snake[0];
+        if (head.x === appleX && head.y === appleY) {
+            score += 10;
+            scoreVal.innerText = score;
+            spawnApple();
+        } else {
+            snake.pop(); // Remove tail segment to keep length same
+        }
+    }
+
+    function spawnApple() {
+        let isValid = false;
+        while (!isValid) {
+            appleX = Math.floor(Math.random() * tileCount);
+            appleY = Math.floor(Math.random() * tileCount);
+            isValid = true;
+            // Prevent spawning inside snake
+            for (let part of snake) {
+                if(part.x === appleX && part.y === appleY) {
+                    isValid = false;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Controls Logic
+    function changeDirection(newVx, newVy) {
+        if (!isPlaying) return;
+        // Prevent 180 degree turns
+        if (newVx !== 0 && lastVelocityX !== 0) return; 
+        if (newVy !== 0 && lastVelocityY !== 0) return; 
+        velocityX = newVx;
+        velocityY = newVy;
+    }
+
+    // Keyboard bindings
+    document.body.addEventListener('keydown', (e) => {
+        // Only override normal scrolling for gameplay keys IF game is active
+        if(!isPlaying && [37, 38, 39, 40, 87, 83, 65, 68].includes(e.keyCode)) return; 
+        
+        if (e.keyCode === 38 || e.keyCode === 87) {
+            e.preventDefault();
+            changeDirection(0, -1); // UP
+        }
+        if (e.keyCode === 40 || e.keyCode === 83) {
+            e.preventDefault();
+            changeDirection(0, 1); // DOWN
+        }
+        if (e.keyCode === 37 || e.keyCode === 65) {
+            e.preventDefault();
+            changeDirection(-1, 0); // LEFT
+        }
+        if (e.keyCode === 39 || e.keyCode === 68) {
+            e.preventDefault();
+            changeDirection(1, 0); // RIGHT
+        }
+    });
+
+    // Mobile button bindings
+    if(btnUp) btnUp.addEventListener('click', () => changeDirection(0, -1));
+    if(btnDown) btnDown.addEventListener('click', () => changeDirection(0, 1));
+    if(btnLeft) btnLeft.addEventListener('click', () => changeDirection(-1, 0));
+    if(btnRight) btnRight.addEventListener('click', () => changeDirection(1, 0));
+
+    // Fix double-firing on touch screens
+    document.querySelectorAll('.d-btn').forEach(btn => {
+        btn.addEventListener('touchstart', (e) => { e.preventDefault(); btn.click(); });
+    });
+
+    startBtn.addEventListener('click', resetGame);
+    
+    // Draw grid upon loading page
+    clearScreen();
+</script>
